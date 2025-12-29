@@ -3,7 +3,7 @@
 use crate::crypto;
 use crate::error::{Error, Result};
 use crate::models::*;
-use crate::server::{auth, db::Database};
+use crate::server::auth;
 use axum::{
     extract::{Path, State},
     http::{HeaderMap, StatusCode},
