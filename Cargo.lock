@@ -1840,6 +1840,7 @@ dependencies = [
  "lazy_static",
  "notify",
  "parking_lot",
+ "password-hash",
  "rand",
  "ring",
  "rsa",
