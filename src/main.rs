@@ -55,7 +55,7 @@ async fn main() -> Result<()> {
             Ok(())
         }
         Commands::Help => {
-            println!("{}", Cli::command().render_help());
+            println!("{}", Cli::parse().command);
             Ok(())
         }
     }
