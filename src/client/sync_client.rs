@@ -23,7 +23,7 @@ impl SyncClient {
         let data = fs::read(file_path).await?;
 
         // Encrypt file
-        let (encrypted, nonce) = crypto::encrypt(&data, encryption_key)?;
+        let (encrypted, _nonce) = crypto::encrypt(&data, encryption_key)?;
 
         // Compute hash
         let hash = crypto::compute_hash(&encrypted);
@@ -34,7 +34,7 @@ impl SyncClient {
     }
 
     /// Downloads a file from the server
-    pub async fn download_file(&self, file_id: &str, output_path: &Path, encryption_key: &[u8; 32]) -> Result<()> {
+    pub async fn download_file(&self, _file_id: &str, output_path: &Path, _encryption_key: &[u8; 32]) -> Result<()> {
         // TODO: Download from server via HTTP
 
         // Decrypt and save
