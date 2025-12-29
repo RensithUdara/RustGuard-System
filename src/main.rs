@@ -55,7 +55,19 @@ async fn main() -> Result<()> {
             Ok(())
         }
         Commands::Help => {
-            println!("{}", Cli::parse().command);
+            println!("RustGuard - Secure distributed file backup and sync system");
+            println!("\nUsage: rustguard <COMMAND>");
+            println!("\nCommands:");
+            println!("  register    - Register a new account");
+            println!("  login       - Login to your account");
+            println!("  add-sync    - Add a directory to sync");
+            println!("  list-sync   - List synced directories");
+            println!("  sync        - Start sync daemon");
+            println!("  status      - Show sync status");
+            println!("  download    - Download a file");
+            println!("  list        - List files");
+            println!("  version     - Show version");
+            println!("  help        - Show this help message");
             Ok(())
         }
     }
