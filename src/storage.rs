@@ -2,7 +2,7 @@
 
 use crate::error::{Error, Result};
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use tokio::fs as async_fs;
 
 /// Local file storage handler
@@ -36,54 +36,6 @@ impl LocalStorage {
             .map_err(|e| Error::StorageError(e.to_string()))?;
 
         Ok(file_path)
-    }
-
-    /// Retrieves a file from storage
-    pub async fn retrieve_file(&self, relative_path: &str) -> Result<Vec<u8>> {
-        let file_path = self.base_path.join(relative_path);
-
-        async_fs::read(&file_path)
-            .await
-            .map_err(|e| Error::StorageError(e.to_string()))
-    }
-
-    /// Deletes a file from storage
-    pub async fn delete_file(&self, relative_path: &str) -> Result<()> {
-        let file_path = self.base_path.join(relative_path);
-
-        async_fs::remove_file(&file_path)
-            .await
-            .map_err(|e| Error::StorageError(e.to_string()))
-    }
-
-    /// Lists all files in storage
-    pub fn list_files(&self) -> Result<Vec<PathBuf>> {
-        let mut files = Vec::new();
-
-        for entry in walkdir::WalkDir::new(&self.base_path)
-            .into_iter()
-            .filter_map(|e| e.ok())
-        {
-            if entry.path().is_file() {
-                files.push(entry.path().to_path_buf());
-            }
-        }
-
-        Ok(files)
-    }
-
-    /// Gets file size
-    pub fn get_file_size(&self, relative_path: &str) -> Result<u64> {
-        let file_path = self.base_path.join(relative_path);
-
-        fs::metadata(&file_path)
-            .map(|m| m.len())
-            .map_err(|e| Error::StorageError(e.to_string()))
-    }
-
-    /// Checks if file exists
-    pub fn file_exists(&self, relative_path: &str) -> bool {
-        self.base_path.join(relative_path).exists()
     }
 }
 
