@@ -2,13 +2,14 @@
 
 use crate::error::{Error, Result};
 use aes_gcm::{
-    aead::{Aead, KeyInit, Payload},
+    aead::{Aead, KeyInit},
     Aes256Gcm, Nonce,
 };
-use argon2::{Argon2, PasswordHasher};
+use argon2::{Argon2, PasswordHasher, PasswordVerifier};
+use password_hash::SaltString;
 use rand::Rng;
 use sha2::{Digest, Sha256};
-use std::convert::TryInto;
+use std::path::Path;
 
 const CHUNK_SIZE: usize = 1024 * 1024; // 1MB chunks
 const NONCE_SIZE: usize = 12;
@@ -24,20 +25,6 @@ pub fn generate_nonce() -> [u8; NONCE_SIZE] {
 
 /// Derives an encryption key from a password using Argon2
 pub fn derive_key(password: &str, salt: &[u8; 16]) -> Result<[u8; 32]> {
-    let params = argon2::Params::new(19456, 2, 1, None)
-        .map_err(|e| Error::EncryptionError(e.to_string()))?;
-    
-    let config = argon2::Config {
-        params,
-        version: argon2::Version::Version13,
-        ad: b"",
-        hash_len: 32,
-        secret: &[],
-        time_cost: 2,
-        mem_cost: 19456,
-        parallelism: 1,
-    };
-
     // Simplified key derivation using sha256 with password + salt
     let mut hasher = Sha256::new();
     hasher.update(password.as_bytes());
@@ -64,10 +51,8 @@ pub fn hash_password(password: &str) -> Result<String> {
 
 /// Verifies a password against its hash
 pub fn verify_password(password: &str, hash: &str) -> Result<bool> {
-    use argon2::password_hash::PasswordHash;
-
-    let parsed_hash = PasswordHash::new(hash)
-        .map_err(|e| Error::EncryptionError(e.to_string()))?;
+    use password_hash::PasswordHash;
+    .map_err(|e| Error::EncryptionError(e.to_string()))?;
 
     Ok(Argon2::default()
         .verify_password(password.as_bytes(), &parsed_hash)
