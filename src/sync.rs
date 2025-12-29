@@ -5,7 +5,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::sync::mpsc;
 use std::time::Duration;
-use tracing::warn;
+use tracing::{info, warn};
 
 /// File change event
 #[derive(Debug, Clone)]
