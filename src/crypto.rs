@@ -52,7 +52,9 @@ pub fn hash_password(password: &str) -> Result<String> {
 /// Verifies a password against its hash
 pub fn verify_password(password: &str, hash: &str) -> Result<bool> {
     use password_hash::PasswordHash;
-    .map_err(|e| Error::EncryptionError(e.to_string()))?;
+
+    let parsed_hash = PasswordHash::new(hash)
+        .map_err(|e| Error::EncryptionError(e.to_string()))?;
 
     Ok(Argon2::default()
         .verify_password(password.as_bytes(), &parsed_hash)
