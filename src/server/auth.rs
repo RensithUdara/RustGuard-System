@@ -1,9 +1,7 @@
 //! Authentication module for the server
 
 use axum::{
-    body::Body,
     extract::Request,
-    http::HeaderMap,
     middleware::Next,
     response::Response,
 };
